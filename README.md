@@ -46,21 +46,55 @@ $ git remote add origin https://github.com/${GITHUB_USERNAME}/lab03.git
 ```sh
 $ g++ -std=c++11 -I./include -c sources/print.cpp
 $ ls print.o
+print.o
 $ nm print.o | grep print
+0000000000000095 t _GLOBAL__sub_I__Z5printRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERSo
+0000000000000000 T _Z5printRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERSo
+0000000000000026 T _Z5printRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERSt14basic_ofstreamIcS2_E
 $ ar rvs print.a print.o
+ar: создаётся print.a
+a - print.o
 $ file print.a
+print.a: current ar archive
 $ g++ -std=c++11 -I./include -c examples/example1.cpp
 $ ls example1.o
+example1.o
 $ g++ example1.o print.a -o example1
 $ ./example1 && echo
+
+hello
+
 ```
 
 ```sh
 $ g++ -std=c++11 -I./include -c examples/example2.cpp
 $ nm example2.o
+    U __cxa_atexit
+                 U __dso_handle
+0000000000000000 V DW.ref.__gxx_personality_v0
+                 U _GLOBAL_OFFSET_TABLE_
+0000000000000128 t _GLOBAL__sub_I_main
+                 U __gxx_personality_v0
+0000000000000000 T main
+                 U _Unwind_Resume
+00000000000000df t _Z41__static_initialization_and_destruction_0ii
+                 U _Z5printRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERSt14basic_ofstreamIcS2_E
+                 U _ZNSaIcEC1Ev
+                 U _ZNSaIcED1Ev
+                 U _ZNSt14basic_ofstreamIcSt11char_traitsIcEEC1EPKcSt13_Ios_Openmode
+                 U _ZNSt14basic_ofstreamIcSt11char_traitsIcEED1Ev
+                 U _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1EPKcRKS3_
+                 U _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED1Ev
+                 U _ZNSt8ios_base4InitC1Ev
+                 U _ZNSt8ios_base4InitD1Ev
+0000000000000000 r _ZStL19piecewise_construct
+0000000000000000 b _ZStL8__ioinit
 $ g++ example2.o print.a -o example2
 $ ./example2
 $ cat log.txt && echo
+
+hello
+
 ```
 
 ```sh
@@ -119,13 +153,31 @@ EOF
 
 ```sh
 $ cmake --build _build
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Documents/GitHub/scorpy2013/workspace/projects/lab03/_build
+[ 33%] Built target print
+Scanning dependencies of target example2
+[ 50%] Building CXX object CMakeFiles/example2.dir/examples/example2.cpp.o
+[ 66%] Linking CXX executable example2
+[ 66%] Built target example2
+Scanning dependencies of target example1
+[ 83%] Building CXX object CMakeFiles/example1.dir/examples/example1.cpp.o
+[100%] Linking CXX executable example1
+[100%] Built target example1
 $ cmake --build _build --target print
+[100%] Built target print
 $ cmake --build _build --target example1
+[ 50%] Built target print
+[100%] Built target example1
 $ cmake --build _build --target example2
+[ 50%] Built target print
+[100%] Built target example2
 ```
 
 ```sh
 $ ls -la _build/libprint.a
+-rw-r--r-- 1 mic mic 3118 май 10 14:35 _build/libprint.a
 $ _build/example1 && echo
 hello
 $ _build/example2
@@ -186,8 +238,28 @@ install(TARGETS print
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include)
 install(EXPORT print-config DESTINATION cmake)
 $ cmake -H. -B_build -DCMAKE_INSTALL_PREFIX=_install
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Documents/Users/scorpy2013/workspace/projects/lab03/_build
 $ cmake --build _build --target install
+Install the project...
+-- Install configuration: ""
+-- Installing: /Documents/Users/scorpy2013/workspace/projects/lab03/_install/lib/libprint.a
+-- Installing: /Documents/Users/scorpy2013/workspace/projects/lab03/_install/include
+-- Installing: /Documents/Users/scorpy2013/workspace/projects/lab03/_install/include/print.hpp
+-- Installing: /Documents/Users/scorpy2013/workspace/projects/lab03/_install/cmake/print-config.cmake
+-- Installing: /Documents/Users/scorpy2013/workspace/projects/lab03/_install/cmake/print-config-noconfig.cmake
 $ tree _install
+_install
+├── cmake
+│   ├── print-config.cmake
+│   └── print-config-noconfig.cmake
+├── include
+│   └── print.hpp
+└── lib
+    └── libprint.a
+
+3 directories, 4 files
 ```
 
 ```sh
